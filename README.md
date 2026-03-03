@@ -144,6 +144,10 @@ sclibridge servicerequest Zone Host Controller 1 SVC_ENV_LIGHTING SwitchOn Addre
 4. **onSet** — Sends commands immediately through the serial queue
 5. **Bridge** — Ruby TCPServer accepts HTTP GET, runs `sclibridge` subprocess, returns result
 
+## Credits
+
+- **[benumc](https://github.com/benumc)** — The Ruby HTTP bridge (`bridge_logic.rb`) is based on [SCLI_HTTP](https://github.com/benumc/SCLI_HTTP), and the device command/state formats used in this plugin come from Savant Blueprint profiles created by benumc. His work on bridging `sclibridge` to HTTP and creating reusable profiles for the Savant ecosystem made this integration possible.
+
 ## License
 
 MIT
