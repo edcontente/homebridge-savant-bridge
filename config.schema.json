@@ -1,0 +1,152 @@
+{
+  "pluginAlias": "SavantBridge",
+  "pluginType": "platform",
+  "singular": true,
+  "headerDisplay": "Savant Bridge - Controle dispositivos Savant pelo Apple Home. Sem necessidade de token.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "Nome da Plataforma",
+        "type": "string",
+        "default": "Savant",
+        "required": true
+      },
+      "host": {
+        "title": "IP do Savant Host",
+        "type": "string",
+        "placeholder": "192.168.1.100",
+        "required": true,
+        "description": "Endereço IP do Savant Host na rede local"
+      },
+      "scliPort": {
+        "title": "Porta sclibridge (TCP/HTTP)",
+        "type": "integer",
+        "default": 12000,
+        "description": "Porta do sclibridge HTTP bridge (padrão: 12000)"
+      },
+      "apiPort": {
+        "title": "Porta API OpenAPI",
+        "type": "integer",
+        "default": 3060,
+        "description": "Porta da Savant OpenAPI para cenas (padrão: 3060)"
+      },
+      "pollingInterval": {
+        "title": "Intervalo de Polling (segundos)",
+        "type": "integer",
+        "default": 30,
+        "minimum": 10,
+        "maximum": 3600,
+        "description": "Intervalo em segundos para atualizar estados dos dispositivos"
+      },
+      "discoverScenes": {
+        "title": "Descobrir Cenas Automaticamente",
+        "type": "boolean",
+        "default": true,
+        "description": "Busca e adiciona cenas do Savant automaticamente via porta 3060"
+      },
+      "accessories": {
+        "title": "Dispositivos",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "title": "Nome do Dispositivo",
+              "type": "string",
+              "required": true,
+              "description": "Nome que aparecerá no Apple Home"
+            },
+            "type": {
+              "title": "Tipo",
+              "type": "string",
+              "required": true,
+              "oneOf": [
+                { "title": "Switch (Liga/Desliga)", "enum": ["switch"] },
+                { "title": "Lightbulb (Luz com Dimmer)", "enum": ["lightbulb"] },
+                { "title": "Thermostat (Ar-Condicionado/HVAC)", "enum": ["thermostat"] }
+              ]
+            },
+            "on": {
+              "title": "Comando ON",
+              "type": "string",
+              "description": "Comando sclibridge para ligar (separado por vírgulas). Ex: Living,Savant Host Master,RacePointMedia_touchpanel_server_1,1,SVC_ENV_LIGHTING,SwitchOn,Address1,003,Address2,1"
+            },
+            "off": {
+              "title": "Comando OFF",
+              "type": "string",
+              "description": "Comando sclibridge para desligar (separado por vírgulas)"
+            },
+            "query": {
+              "title": "Query de Estado",
+              "type": "string",
+              "description": "Estado a consultar via readstate. Ex: Living.LightsAreOn"
+            },
+            "set": {
+              "title": "Comando SET (Dimmer/Temperatura)",
+              "type": "string",
+              "description": "Comando com VARLEVEL (dimmer 0-100) ou VARTEMP (temperatura). Ex: ...DimmerLevel,VARLEVEL"
+            },
+            "cool": {
+              "title": "Comando COOL (HVAC)",
+              "type": "string",
+              "description": "Comando para modo refrigeração (apenas termostato)"
+            },
+            "heat": {
+              "title": "Comando HEAT (HVAC)",
+              "type": "string",
+              "description": "Comando para modo aquecimento (apenas termostato)"
+            },
+            "queryTemp": {
+              "title": "Query de Temperatura",
+              "type": "string",
+              "description": "Estado de temperatura via readstate (apenas termostato)"
+            },
+            "queryState": {
+              "title": "Query de Modo HVAC",
+              "type": "string",
+              "description": "Estado do modo HVAC via readstate (apenas termostato). 0=OFF, 1=HEAT, 2=COOL"
+            }
+          }
+        }
+      }
+    }
+  },
+  "layout": [
+    "name",
+    "host",
+    {
+      "type": "fieldset",
+      "title": "Portas",
+      "expandable": true,
+      "items": ["scliPort", "apiPort"]
+    },
+    "pollingInterval",
+    "discoverScenes",
+    {
+      "key": "accessories",
+      "type": "array",
+      "title": "Dispositivos",
+      "buttonText": "Adicionar Dispositivo",
+      "items": [
+        "accessories[].name",
+        "accessories[].type",
+        "accessories[].on",
+        "accessories[].off",
+        "accessories[].query",
+        "accessories[].set",
+        {
+          "type": "fieldset",
+          "title": "HVAC (apenas termostato)",
+          "expandable": true,
+          "items": [
+            "accessories[].cool",
+            "accessories[].heat",
+            "accessories[].queryTemp",
+            "accessories[].queryState"
+          ]
+        }
+      ]
+    }
+  ]
+}

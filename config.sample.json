@@ -1,0 +1,39 @@
+{
+  "platforms": [
+    {
+      "platform": "SavantBridge",
+      "name": "Savant Home",
+      "host": "192.168.1.100",
+      "scliPort": 12000,
+      "apiPort": 3060,
+      "pollingInterval": 30,
+      "discoverScenes": true,
+      "accessories": [
+        {
+          "name": "Living Room Ceiling",
+          "type": "lightbulb",
+          "on": "Living,HostName,Lighting_controller,1,SVC_ENV_LIGHTING,DimmerSet,Address1,100,Address2,1,DimmerLevel,100",
+          "off": "Living,HostName,Lighting_controller,1,SVC_ENV_LIGHTING,DimmerSet,Address1,100,Address2,1,DimmerLevel,0",
+          "set": "Living,HostName,Lighting_controller,1,SVC_ENV_LIGHTING,DimmerSet,Address1,100,Address2,1,DimmerLevel,VARLEVEL",
+          "query": "HostName.Lighting_controller.DimmerLevel_100_1"
+        },
+        {
+          "name": "Kitchen Light",
+          "type": "switch",
+          "on": "Kitchen,HostName,Lighting_controller,1,SVC_ENV_LIGHTING,SwitchOn,Address1,100,Address2,2",
+          "off": "Kitchen,HostName,Lighting_controller,1,SVC_ENV_LIGHTING,SwitchOff,Address1,100,Address2,2",
+          "query": "HostName.Lighting_controller.DimmerLevel_100_2"
+        },
+        {
+          "name": "AC Living Room",
+          "type": "thermostat",
+          "off": "Living,HostName,Lighting_controller,1,SVC_ENV_SINGLE_SETPOINT_HVAC,SetHVACModeOff,ThermostatAddress,101:1",
+          "cool": "Living,HostName,Lighting_controller,1,SVC_ENV_SINGLE_SETPOINT_HVAC,SetHVACModeCool,ThermostatAddress,101:1",
+          "set": "Living,HostName,Lighting_controller,1,SVC_ENV_SINGLE_SETPOINT_HVAC,SetSingleSetPointTemperature,ThermostatAddress,101:1,SetPointTemperature,VARTEMP",
+          "queryTemp": "HostName.Lighting_controller.ThermostatCurrentTemperature_101:1",
+          "queryState": "HostName.Lighting_controller.ThermostatCurrentHVACMode_101:1"
+        }
+      ]
+    }
+  ]
+}

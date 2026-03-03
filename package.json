@@ -1,0 +1,34 @@
+{
+  "name": "homebridge-savant-bridge",
+  "version": "1.0.0",
+  "displayName": "Savant Bridge",
+  "description": "Homebridge plugin for Savant home automation. Controls lights, switches, thermostats and scenes over the network. No token required.",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "engines": {
+    "node": "^18.17.0 || ^20.9.0 || ^22.0.0 || ^24.0.0",
+    "homebridge": "^1.8.0 || ^2.0.0-beta.0"
+  },
+  "scripts": {
+    "build": "rm -rf ./dist && tsc",
+    "watch": "tsc -w",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "homebridge-plugin",
+    "savant",
+    "homekit",
+    "smart-home",
+    "automation"
+  ],
+  "dependencies": {
+    "axios": "^1.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "homebridge": "^1.8.0",
+"typescript": "^5.3.0"
+  },
+  "homepage": "https://github.com/edgardcontente/homebridge-savant-bridge",
+  "funding": []
+}
