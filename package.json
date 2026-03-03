@@ -2,9 +2,18 @@
   "name": "homebridge-savant-bridge",
   "version": "1.0.0",
   "displayName": "Savant Bridge",
-  "description": "Homebridge plugin for Savant home automation. Controls lights, switches, thermostats and scenes over the network. No token required.",
+  "description": "Homebridge plugin for Savant home automation. Controls lights, switches, thermostats and scenes via Apple HomeKit. No token required.",
   "license": "MIT",
+  "author": "edcontente",
   "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/edcontente/homebridge-savant-bridge.git"
+  },
+  "bugs": {
+    "url": "https://github.com/edcontente/homebridge-savant-bridge/issues"
+  },
+  "homepage": "https://github.com/edcontente/homebridge-savant-bridge#readme",
   "engines": {
     "node": "^18.17.0 || ^20.9.0 || ^22.0.0 || ^24.0.0",
     "homebridge": "^1.8.0 || ^2.0.0-beta.0"
@@ -19,7 +28,18 @@
     "savant",
     "homekit",
     "smart-home",
-    "automation"
+    "automation",
+    "lighting",
+    "hvac",
+    "scenes"
+  ],
+  "files": [
+    "dist/",
+    "config.schema.json",
+    "bridge_logic.rb",
+    "package.json",
+    "README.md",
+    "LICENSE"
   ],
   "dependencies": {
     "axios": "^1.7.0"
@@ -27,8 +47,6 @@
   "devDependencies": {
     "@types/node": "^20.11.0",
     "homebridge": "^1.8.0",
-"typescript": "^5.3.0"
-  },
-  "homepage": "https://github.com/edcontente/homebridge-savant-bridge",
-  "funding": []
+    "typescript": "^5.3.0"
+  }
 }
