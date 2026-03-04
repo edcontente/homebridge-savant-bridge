@@ -2,7 +2,7 @@
   "pluginAlias": "SavantBridge",
   "pluginType": "platform",
   "singular": true,
-  "headerDisplay": "Savant Bridge - Controle dispositivos Savant pelo Apple Home. Sem necessidade de token.",
+  "headerDisplay": "Savant Bridge — Control Savant devices via Apple Home. No token required. See README for how to discover your system's commands and state names.",
   "schema": {
     "type": "object",
     "properties": {
@@ -98,14 +98,9 @@
               "description": "Comando para modo aquecimento (apenas termostato)"
             },
             "queryTemp": {
-              "title": "Query de Temperatura",
+              "title": "Temperature State Name",
               "type": "string",
-              "description": "Estado de temperatura via readstate (apenas termostato)"
-            },
-            "queryState": {
-              "title": "Query de Modo HVAC",
-              "type": "string",
-              "description": "Estado do modo HVAC via readstate (apenas termostato). 0=OFF, 1=HEAT, 2=COOL"
+              "description": "readstate name for current temperature (thermostat only). HVAC mode and setpoint are auto-discovered from this. Example: M4.Lighting_controller.ThermostatCurrentTemperature_101:1"
             }
           }
         }
@@ -142,8 +137,7 @@
           "items": [
             "accessories[].cool",
             "accessories[].heat",
-            "accessories[].queryTemp",
-            "accessories[].queryState"
+            "accessories[].queryTemp"
           ]
         }
       ]

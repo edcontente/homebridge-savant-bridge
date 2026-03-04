@@ -7,6 +7,10 @@ export class ThermostatAccessory {
   private mode = 0; // 0=OFF 1=HEAT 2=COOL
   private readonly svc: Service;
 
+  // Derived from queryTemp: "prefix.ThermostatCurrentTemperature_address"
+  private readonly statePrefix?: string;
+  private readonly stateAddr?: string;
+
   constructor(
     private readonly platform: SavantBridgePlatform,
     accessory: PlatformAccessory,
@@ -15,10 +19,19 @@ export class ThermostatAccessory {
     const S = platform.Service;
     const C = platform.Characteristic;
 
+    // Extract prefix and address from queryTemp for automatic state discovery
+    if (cfg.queryTemp) {
+      const match = cfg.queryTemp.match(/^(.+)\.ThermostatCurrentTemperature_(.+)$/);
+      if (match) {
+        this.statePrefix = match[1];
+        this.stateAddr = match[2];
+      }
+    }
+
     accessory.getService(S.AccessoryInformation)!
       .setCharacteristic(C.Manufacturer, 'Savant')
       .setCharacteristic(C.Model, 'HVAC')
-      .setCharacteristic(C.SerialNumber, cfg.queryState || cfg.name);
+      .setCharacteristic(C.SerialNumber, cfg.name);
 
     this.svc = accessory.getService(S.Thermostat) || accessory.addService(S.Thermostat);
     this.svc.setCharacteristic(C.Name, cfg.name);
@@ -89,26 +102,45 @@ export class ThermostatAccessory {
   async poll() {
     const C = this.platform.Characteristic;
 
+    // Read current temperature
     if (this.cfg.queryTemp) {
       try {
         const t = parseFloat(await this.platform.client.readState(this.cfg.queryTemp));
         if (!isNaN(t)) {
           this.currentTemp = t;
-          this.targetTemp = Math.min(30, Math.max(16, t));
           this.svc.updateCharacteristic(C.CurrentTemperature, this.currentTemp);
-          this.svc.updateCharacteristic(C.TargetTemperature, this.targetTemp);
         }
       } catch { /* keep cache */ }
     }
 
-    if (this.cfg.queryState) {
+    // Auto-discover mode and setpoint from Savant boolean states
+    if (this.statePrefix && this.stateAddr) {
+      const p = this.statePrefix;
+      const a = this.stateAddr;
+
+      // Read target temperature (setpoint)
       try {
-        const m = parseInt(await this.platform.client.readState(this.cfg.queryState), 10);
-        if (!isNaN(m)) {
-          this.mode = m;
-          this.svc.updateCharacteristic(C.CurrentHeatingCoolingState, this.hapMode());
-          this.svc.updateCharacteristic(C.TargetHeatingCoolingState, this.hapMode());
+        const sp = parseFloat(await this.platform.client.readState(`${p}.ThermostatCurrentSetPoint_${a}`));
+        if (!isNaN(sp) && sp >= 16 && sp <= 30) {
+          this.targetTemp = sp;
+          this.svc.updateCharacteristic(C.TargetTemperature, this.targetTemp);
         }
+      } catch { /* keep cache */ }
+
+      // Read HVAC mode from boolean states
+      try {
+        const isCool = await this.platform.client.readState(`${p}.IsCurrentHVACModeCool_${a}`);
+        const isHeat = await this.platform.client.readState(`${p}.IsCurrentHVACModeHeat_${a}`);
+
+        if (isCool === '1') {
+          this.mode = 2;
+        } else if (isHeat === '1') {
+          this.mode = 1;
+        } else {
+          this.mode = 0;
+        }
+        this.svc.updateCharacteristic(C.CurrentHeatingCoolingState, this.hapMode());
+        this.svc.updateCharacteristic(C.TargetHeatingCoolingState, this.hapMode());
       } catch { /* keep cache */ }
     }
   }

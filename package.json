@@ -1,6 +1,6 @@
 {
   "name": "homebridge-savant-bridge",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "displayName": "Savant Bridge",
   "description": "Homebridge plugin for Savant home automation. Controls lights, switches, thermostats and scenes via Apple HomeKit. No token required.",
   "license": "MIT",
